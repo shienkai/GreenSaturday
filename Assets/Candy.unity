@@ -905,9 +905,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c93f59d0fb896f4288b0cd1730d679b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  candyPrefab: {fileID: 2305241460244762624, guid: bbe1a6bd1b310394cb0fe7de168f9d5e, type: 3}
+  candyPrefabs:
+  - {fileID: 7267522102104517291, guid: 69ab3d2aadfc7224eaba22cc863d3a63, type: 3}
+  - {fileID: 2305241460244762624, guid: bbe1a6bd1b310394cb0fe7de168f9d5e, type: 3}
+  candyParentTransform: {fileID: 446834602}
   shotForce: 560
   shotTorque: 360
+  baseWidth: 5
 --- !u!4 &746678765
 Transform:
   m_ObjectHideFlags: 0
