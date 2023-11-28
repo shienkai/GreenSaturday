@@ -1004,7 +1004,9 @@ MonoBehaviour:
   - {fileID: 7169251927733096862, guid: 2cfe15bd55719e84cbdf5f87e682ace0, type: 3}
   - {fileID: 664108793998164524, guid: cd15bcfc85755334eb38f1435512fe41, type: 3}
   - {fileID: 3610261248152117104, guid: 7153bfb602713bf408a61c4a1f105625, type: 3}
+  - {fileID: 1247145950594274013, guid: fdb9a9418792c8f4cb433f2c60667b9c, type: 3}
   candyParentTransform: {fileID: 446834602}
+  candyManager: {fileID: 1623926080}
   shotForce: 560
   shotTorque: 360
   baseWidth: 5
