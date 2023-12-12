@@ -5,7 +5,7 @@ using UnityEngine;
 public class Shooter : MonoBehaviour
 {
    const int MaxShotPower = 5;
-   const int RecoverySeconds = 3;
+   const int RecoverySeconds = 1;
    int shotPower = MaxShotPower;
  public GameObject[] candyPrefabs;
  public Transform candyParentTransform;

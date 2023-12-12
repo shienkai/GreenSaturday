@@ -5,9 +5,10 @@ using UnityEngine;
 public class CandyManager : MonoBehaviour
 {
     const int DefaultCandyAmount = 30;
-    const int RecoverySeconds = 10;
+    const int RecoverySeconds = 1;
     public int candy = DefaultCandyAmount;
     int counter;
+    public int score = 0;
 
     public void ConsumeCandy()
     {
@@ -23,6 +24,12 @@ public class CandyManager : MonoBehaviour
     {
         candy += amount;
     }
+
+    public void AddScore(int point)
+    {
+        score += point;
+    }
+
     void OnGUI()
     {
         GUI.color = Color.black;
@@ -31,7 +38,11 @@ public class CandyManager : MonoBehaviour
 
         if (counter > 0) label = label + " ("+ counter + "s)";
 
+        string ScoreLabel = "Score :" + score;
+
         GUI.Label(new Rect(50,50,100,30),label);
+
+        GUI.Label(new Rect(50, 30, 100, 20), ScoreLabel);
     }
     void Update()
     {
