@@ -62,7 +62,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 58bf232745e86cb4899b60ed65e14dac, type: 3}
       propertyPath: m_Name
-      value: "\u5FC5\u4FEE\u5358\u4F4D (1)"
+      value: "\u5FC5\u4FEE\u5358\u4F4D"
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 58bf232745e86cb4899b60ed65e14dac, type: 3}
+      propertyPath: m_TagString
+      value: Hissyuu
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
