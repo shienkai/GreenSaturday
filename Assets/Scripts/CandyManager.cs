@@ -1,7 +1,7 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;  // UI関連のコンポーネントを使用するために必要
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;  // シーン管理のために追加
 
 public class CandyManager : MonoBehaviour
 {
@@ -10,22 +10,20 @@ public class CandyManager : MonoBehaviour
     public int candy = DefaultCandyAmount;
     int counter;
     public int score = 0;
-    private bool isGameOver = false;  // ゲームオーバー状態を管理
+    private bool isGameOver = false;
 
-    public Button restartButton; // Buttonコンポーネントを参照
+    public Button restartButton;
+    public Shooter shooter;  // Shooter スクリプトを参照
 
     void Start()
     {
-        // ゲーム開始時にボタンを非表示にする
         restartButton.gameObject.SetActive(false);  // ゲーム開始時にはボタンを非表示
-        restartButton.onClick.AddListener(RestartGame);  // ボタンがクリックされたときにRestartGameメソッドを呼び出す
+        restartButton.onClick.AddListener(OnRestartButtonClicked);  // ボタンのクリックリスナーを設定
     }
 
     public void ConsumeCandy()
     {
-        // ゲームオーバー状態ではキャンディを消費できない
         if (isGameOver || candy <= 0) return;
-
         candy--;
     }
 
@@ -47,29 +45,26 @@ public class CandyManager : MonoBehaviour
     void OnGUI()
     {
         GUI.color = Color.black;
-        
+
         string label = "Candy :" + candy;
-        if (counter > 0) label = label + " ("+ counter + "s)";
+        if (counter > 0) label = label + " (" + counter + "s)";
         string ScoreLabel = "Score :" + score;
 
         GUI.Label(new Rect(50, 50, 100, 30), label);
         GUI.Label(new Rect(50, 30, 100, 20), ScoreLabel);
 
-        // ゲームオーバー時に表示するメッセージ
         if (isGameOver)
         {
             GUI.Label(new Rect(50, 100, 200, 30), "Game Over!");
-            restartButton.gameObject.SetActive(true); // ゲームオーバー後にボタンを表示
+            restartButton.gameObject.SetActive(true);  // ゲームオーバー後にボタンを表示
         }
     }
 
     void Update()
     {
-        // ゲームオーバー状態では処理を行わない
         if (isGameOver) return;
 
-        // スコアが-30を下回った場合にゲームオーバー
-        if (score < -30)
+        if (score < -2)
         {
             GameOver();
         }
@@ -95,20 +90,27 @@ public class CandyManager : MonoBehaviour
     void GameOver()
     {
         isGameOver = true;
-        restartButton.gameObject.SetActive(true); // ゲームオーバー後にボタンを表示
+        restartButton.gameObject.SetActive(true);  // ゲームオーバー後にボタンを表示
+
+        if (shooter != null)
+        {
+            shooter.StopShooting();  // ゲームオーバー時に発射を停止
+        }
     }
 
-    // ゲームをリスタートするメソッド
-    public void RestartGame()
+    // シーンリロードを含めたリスタート処理
+    public IEnumerator RestartGame()
     {
-        score = 0;             // スコアをリセット
-        candy = DefaultCandyAmount;  // キャンディの数をリセット
-        isGameOver = false;    // ゲームオーバーフラグを解除
-        counter = 0;           // カウントダウンをリセット
-        restartButton.gameObject.SetActive(false); // ボタンを非表示にする
+        // ゲームオーバー処理中に何か遅延を加えたい場合に使える
+        yield return new WaitForSeconds(1f);  // 例えば1秒の遅延
 
-        // 必要に応じて、シーンをリロードする処理を追加できます。
-        // 例えば、シーンをリロードする場合:
-        // UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
+        // シーンリロード (現在のシーンを再読み込み)
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    // ボタンがクリックされたときに呼ばれるラップメソッド
+    void OnRestartButtonClicked()
+    {
+        StartCoroutine(RestartGame());  // コルーチンの呼び出し
     }
 }

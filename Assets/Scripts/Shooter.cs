@@ -7,66 +7,87 @@ public class Shooter : MonoBehaviour
    const int MaxShotPower = 5;
    const int RecoverySeconds = 1;
    int shotPower = MaxShotPower;
- public GameObject[] candyPrefabs;
- public Transform candyParentTransform;
+   public GameObject[] candyPrefabs;
+   public Transform candyParentTransform;
 
- public CandyManager candyManager;
- public float shotForce;
- public float shotTorque;
- public float baseWidth;
+   public CandyManager candyManager;
+   public float shotForce;
+   public float shotTorque;
+   public float baseWidth;
 
- void Update()
- {
-    if (Input.GetButtonDown("Fire1")) Shot();
- }
+   private bool canShoot = true;  // 発射可能かどうかのフラグ
 
- GameObject SampleCandy()
- {
-   int index = Random.Range(0,candyPrefabs.Length);
-   return candyPrefabs[index];
- }
+   void Update()
+   {
+       if (canShoot && Input.GetButtonDown("Fire1"))
+       {
+           Shot();
+       }
+   }
+
+   GameObject SampleCandy()
+   {
+       int index = Random.Range(0, candyPrefabs.Length);
+       return candyPrefabs[index];
+   }
+
    Vector3 GetInstantiatePosition()
-{
-float x = baseWidth *
-    (Input.mousePosition.x / Screen.width) - (baseWidth / 2);
-    return transform.position + new Vector3(x,0,0);
-}
- public void Shot()
- {
-   if (candyManager.GetCandyAmount() <= 0) return;
-   if (shotPower <= 0) return;
-    GameObject candy = (GameObject)Instantiate(
-        SampleCandy(),
-        GetInstantiatePosition(),
-        Quaternion.identity
-    );
+   {
+       float x = baseWidth * (Input.mousePosition.x / Screen.width) - (baseWidth / 2);
+       return transform.position + new Vector3(x, 0, 0);
+   }
 
-    candy.transform.parent = candyParentTransform;
-    Rigidbody candyRigidBody = candy.GetComponent<Rigidbody>();
-    candyRigidBody.AddForce(transform.forward * shotForce);
-    candyRigidBody.AddTorque(new Vector3(0,shotTorque,0));
+   public void Shot()
+   {
+       if (candyManager.GetCandyAmount() <= 0) return;
+       if (shotPower <= 0) return;
 
-    candyManager.ConsumeCandy();
-    ConsumePower();
- }
+       GameObject candy = (GameObject)Instantiate(
+           SampleCandy(),
+           GetInstantiatePosition(),
+           Quaternion.identity
+       );
 
- void OnGUI()
- {
-   GUI.color = Color.black;
+       candy.transform.parent = candyParentTransform;
+       Rigidbody candyRigidBody = candy.GetComponent<Rigidbody>();
+       candyRigidBody.AddForce(transform.forward * shotForce);
+       candyRigidBody.AddTorque(new Vector3(0, shotTorque, 0));
 
-   string label = "";
-   for (int i = 0; i < shotPower; i++) label = label + "+";
+       candyManager.ConsumeCandy();
+       ConsumePower();
+   }
 
-   GUI.Label(new Rect(50, 65, 100, 30), label);
- }
- void ConsumePower()
- {
-   shotPower--;
-   StartCoroutine(RecoverPower());
- }
- IEnumerator RecoverPower()
- {
-   yield return new WaitForSeconds(RecoverySeconds);
-   shotPower++;
- }
+   void OnGUI()
+   {
+       GUI.color = Color.black;
+
+       string label = "";
+       for (int i = 0; i < shotPower; i++) label = label + "+";
+
+       GUI.Label(new Rect(50, 65, 100, 30), label);
+   }
+
+   void ConsumePower()
+   {
+       shotPower--;
+       StartCoroutine(RecoverPower());
+   }
+
+   IEnumerator RecoverPower()
+   {
+       yield return new WaitForSeconds(RecoverySeconds);
+       shotPower++;
+   }
+
+   // ゲームオーバー時に発射を無効にする
+   public void StopShooting()
+   {
+       canShoot = false;
+   }
+
+   // ゲーム再開時に発射を再開
+   public void ResumeShooting()
+   {
+       canShoot = true;
+   }
 }
