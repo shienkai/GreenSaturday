@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;  // シーン管理のために追加
+using UnityEngine.SceneManagement;
 
 public class CandyManager : MonoBehaviour
 {
@@ -9,11 +9,15 @@ public class CandyManager : MonoBehaviour
     const int RecoverySeconds = 1;
     public int candy = DefaultCandyAmount;
     int counter;
-    public int score = 0;
+    
+    // 正のスコアと負のスコア
+    public int positiveScore = 0;
+    public int negativeScore = 0;
+
     private bool isGameOver = false;
 
     public Button restartButton;
-    public Shooter shooter;  // Shooter スクリプトを参照
+    public Shooter shooter;
 
     void Start()
     {
@@ -37,9 +41,16 @@ public class CandyManager : MonoBehaviour
         candy += amount;
     }
 
-    public void AddScore(int point)
+    // 正のスコアを追加
+    public void AddPositiveScore(int point)
     {
-        score += point;
+        positiveScore += point;
+    }
+
+    // 負のスコアを追加
+    public void AddNegativeScore(int point)
+    {
+        negativeScore += point;
     }
 
     void OnGUI()
@@ -48,10 +59,12 @@ public class CandyManager : MonoBehaviour
 
         string label = "Candy :" + candy;
         if (counter > 0) label = label + " (" + counter + "s)";
-        string ScoreLabel = "Score :" + score;
+        string positiveScoreLabel = "取得単位数 :" + positiveScore;
+        string negativeScoreLabel = "不可 :" + negativeScore;
 
-        GUI.Label(new Rect(50, 50, 100, 30), label);
-        GUI.Label(new Rect(50, 30, 100, 20), ScoreLabel);
+        GUI.Label(new Rect(50, 50, 200, 30), label);
+        GUI.Label(new Rect(50, 10, 200, 30), positiveScoreLabel);
+        GUI.Label(new Rect(50, 30, 200, 30), negativeScoreLabel);
 
         if (isGameOver)
         {
@@ -64,7 +77,8 @@ public class CandyManager : MonoBehaviour
     {
         if (isGameOver) return;
 
-        if (score < -2)
+        // 負のスコアが -2 より少ない場合にゲームオーバー
+        if (negativeScore < -2)
         {
             GameOver();
         }
@@ -101,14 +115,10 @@ public class CandyManager : MonoBehaviour
     // シーンリロードを含めたリスタート処理
     public IEnumerator RestartGame()
     {
-        // ゲームオーバー処理中に何か遅延を加えたい場合に使える
         yield return new WaitForSeconds(1f);  // 例えば1秒の遅延
-
-        // シーンリロード (現在のシーンを再読み込み)
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);  // 現在のシーンを再読み込み
     }
 
-    // ボタンがクリックされたときに呼ばれるラップメソッド
     void OnRestartButtonClicked()
     {
         StartCoroutine(RestartGame());  // コルーチンの呼び出し

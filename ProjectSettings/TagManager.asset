@@ -7,6 +7,8 @@ TagManager:
   - Candy
   - Sentaku
   - Hissyuu
+  - NegativeZone
+  - PositiveZone
   layers:
   - Default
   - TransparentFX
